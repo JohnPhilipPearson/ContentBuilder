@@ -78,7 +78,21 @@ describe "Authentication" do
             page.should have_selector('title', text: 'Edit user')
           end
         end
-      end# when attempting to visit a protected page 
+      end# when attempting to visit a protected page
+      describe "in the Microposts controller" do
+
+        describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { response.should redirect_to(signin_path) }
+        end
+        describe "submitting to the destroy action" do
+          before do
+            micropost = FactoryGirl.create(:micropost)
+            delete micropost_path(micropost)
+          end
+          specify { response.should redirect_to(signin_path) }
+        end #submitting to the destroy action
+      end #in the Microposts controller
     end # for non-signed-in users
     describe "as wrong user" do
         let(:user) { FactoryGirl.create(:user) }
